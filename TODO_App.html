@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO App</title>
+
+    <div class="TODO-APP">
+        <!-- 顶部标题 -->
+        <div class="title"> ZY的Todo App </div>
+        <div class="todo-form">
+            <label for="todo-input" class="todo-label"></label>
+            <input type="text" id="todo-input" class="todo-input" placeholder="在此输入待办事项">
+
+            <div><button class="todo-button">点击添加</button></div>
+        </div>
+    </div>
+
+    <style>
+        .todo-input {
+            padding-left: 10px;
+            /* 设置左内边距为 10px */
+            width: 60%;
+            height: 50px;
+            border: 1px solid #dfe1e5;
+            outline: none;
+
+            border-radius: 20px 0 0 20px;
+            /*注意这里的圆角没有逗号隔开，定义顺序为顺时针，即 
+            1 --> 2
+            ↑     ↓
+            4 <-- 3  */
+        }
+
+        .todo-button {
+            width: 100px;
+            height: 50px;
+            border-radius: 0 20px 20px 0;
+            background: linear-gradient(45deg, rgb(137, 0, 137), rgb(49, 49, 126), rgb(15, 152, 15));
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            /* cursor属性设置鼠标移入按钮时，显示的形状，pointer显示为手指点击形状 */
+            user-select: none;
+            /* line-height: 50px; */
+            /*设置行高等于高度时，可以实现垂直居中*/
+            color: white;
+            /* box-shadow: 2px 2px 5px #888888; */
+            /* 设置阴影 */
+        }
+
+        .todo-form {
+            padding-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            outline: none;
+
+        }
+
+        .title {
+            /* margin-top: 10%; */
+            /* 设置顶部外边距为 10% */
+            padding-top: 10px;
+            box-sizing: border-box;
+            color: black;
+            /* 设置居中显示 */
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        body {
+            margin: 0;
+            /* 去除默认的页面边距 */
+            height: 100vh;
+            /* 让 body 占满整个视口高度 */
+            background: linear-gradient(45deg, rgb(137, 0, 137), rgb(49, 49, 126), rgb(15, 152, 15));
+            /* 从左到右的紫色到蓝色渐变 */
+        }
+
+        .TODO-APP {
+            text-align: center;
+            background-color: aliceblue;
+            /* 设置背景颜色 */
+            width: 98%;
+            height: 500px;
+            border-radius: 10px;
+            margin-top: 40px;
+            margin-left: 1%;
+            /* 设置左外边距为 2% */
+        }
+    </style>
+</head>
+
+<body>
+</body>
+
+</html>
