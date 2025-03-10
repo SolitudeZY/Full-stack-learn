@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from openai import OpenAI
 import threading
 
@@ -6,6 +6,11 @@ app = Flask(__name__)
 
 # 初始化 OpenAI 客户端
 client = OpenAI(api_key="sk-6420bba0892f4be7ac066d109d8aa03b", base_url="https://api.deepseek.com")
+
+# 提供前端页面
+@app.route('/')
+def index():
+    return render_template('index.html')  # 渲染前端页面
 
 @app.route('/api/deepseek', methods=['POST'])
 def deepseek_api():

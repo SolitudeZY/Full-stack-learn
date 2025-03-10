@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepseek Chat Interface</title>
+    <!-- 引用 particles.min.js -->
+    <script src="/static/js/particles.min.js"></script>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: white;
+            overflow: hidden;
+            /* 防止滚动条出现 */
+        }
+
+        /* 动态背景容器 */
+        .dynamic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* 粒子效果容器 */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+        }
+
+        /* 聊天容器 */
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 聊天框 */
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* 消息样式 */
+        .message {
+            margin: 10px 0;
+            padding: 12px 15px;
+            max-width: 70%;
+            border-radius: 15px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .message.user {
+            background: #ff7f50;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background: #6a11cb;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+
+        /* 输入框 */
+        .input-box {
+            display: flex;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-box input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        .input-box input:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .input-box button {
+            padding: 12px 20px;
+            margin-left: 10px;
+            border: none;
+            background: #ff7f50;
+            color: white;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .input-box button:hover {
+            background: #e65c00;
+            transform: scale(1.05);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 动态背景动画 */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 动态背景 -->
+    <div class="dynamic-background">
+        <!-- 粒子效果容器 -->
+        <div id="particles-js"></div>
+    </div>
+
+    <!-- 聊天界面 -->
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Type your question here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const userText = userInput.value.trim();
+            if (!userText) return;
+
+            addMessage(userText, 'user');
+            userInput.value = '';
+
+            try {
+                const response = await fetch('/api/deepseek', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userText })
+                });
+
+                const data = await response.json();
+                addMessage(data.response, 'bot');
+            } catch (error) {
+                addMessage('Error communicating with Deepseek.', 'bot');
+            }
+        }
+
+        userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+
+    <script>
+        // 初始化 particles.js
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80, // 粒子数量
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff" // 粒子颜色
+                },
+                "shape": {
+                    "type": "circle", // 粒子形状：circle, edge, triangle, polygon, star, image
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5, // 粒子透明度
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3, // 粒子大小
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150, // 粒子之间的连接距离
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2, // 粒子移动速度
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse" // 鼠标悬停时的效果：grab, bubble, repulse
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push" // 鼠标点击时的效果：push, remove, bubble, repulse
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+
+</html>
