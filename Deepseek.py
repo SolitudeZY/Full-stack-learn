@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from openai import OpenAI
 import threading
 
-app = Flask(__name__)
-
+app = Flask(__name__, static_folder='static')
 # 初始化 OpenAI 客户端
 client = OpenAI(api_key="sk-6420bba0892f4be7ac066d109d8aa03b", base_url="https://api.deepseek.com")
 
